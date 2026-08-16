@@ -37,6 +37,36 @@ ui-state:
       updatedAt: 1750000000000
 ```
 
+## 安装 / 下载
+
+### 从 npm 安装（推荐）
+
+```bash
+dsh plugin --profile web add @zink-ning/dsh-ui-state
+```
+
+也可以手动安装依赖并装配：
+
+```bash
+npm install @zink-ning/dsh-ui-state
+```
+
+然后在 profile 的 `package.json` 中把 `@zink-ning/dsh-ui-state` 加入 `dsh.profile.bundles`。
+
+### 从 GitHub Release 下载
+
+到 [Releases](https://github.com/zink-ning/dsh-ui-state/releases) 下载
+`dsh-ui-state-0.1.1.tgz`，然后安装：
+
+```bash
+dsh plugin --profile web add ./dsh-ui-state-0.1.1.tgz
+```
+
+### 本地开发 / 热装
+
+profile `package.json` 的 `dsh.profile.bundles` 加入 `@zink-ning/dsh-ui-state`，依赖用 `link:` 指向本目录；
+或使用 dev_install_package 热装（junction + loader.create，免重启）。
+
 ## 关联
 
 better-sidebar 等插件把状态存浏览器 localStorage——localStorage 按「域名+端口」隔离，

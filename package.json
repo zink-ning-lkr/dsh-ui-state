@@ -1,8 +1,7 @@
 {
-  "name": "dsh-ui-state",
+  "name": "@zink-ning/dsh-ui-state",
   "description": "界面状态持久化——官方左侧边栏开合与宽度跨重启恢复（自渲染 DOM，官方 client 通道）",
   "version": "0.1.1",
-  "private": true,
   "type": "module",
   "main": "lib/index.js",
   "exports": {
