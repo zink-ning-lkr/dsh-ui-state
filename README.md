@@ -67,6 +67,10 @@ dsh plugin --profile web add ./dsh-ui-state-0.1.1.tgz
 profile `package.json` 的 `dsh.profile.bundles` 加入 `@zink_ning/dsh-ui-state`，依赖用 `link:` 指向本目录；
 或使用 dev_install_package 热装（junction + loader.create，免重启）。
 
+## License
+
+[MIT](LICENSE) © zink-ning (zink_ning)
+
 ## 关联
 
 better-sidebar 等插件把状态存浏览器 localStorage——localStorage 按「域名+端口」隔离，
