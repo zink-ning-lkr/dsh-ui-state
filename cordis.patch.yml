@@ -1,0 +1,4 @@
+# dsh-ui-state bundle：挂 Node half（settings namespace 注册 + loopback 配置桥接），行为主体在 client
+- insert:
+    - id: dsh-ui-state
+      name: 'dsh-ui-state'
