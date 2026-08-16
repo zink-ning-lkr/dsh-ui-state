@@ -42,16 +42,16 @@ ui-state:
 ### 从 npm 安装（推荐）
 
 ```bash
-dsh plugin --profile web add @zink-ning/dsh-ui-state
+dsh plugin --profile web add @zink_ning/dsh-ui-state
 ```
 
 也可以手动安装依赖并装配：
 
 ```bash
-npm install @zink-ning/dsh-ui-state
+npm install @zink_ning/dsh-ui-state
 ```
 
-然后在 profile 的 `package.json` 中把 `@zink-ning/dsh-ui-state` 加入 `dsh.profile.bundles`。
+然后在 profile 的 `package.json` 中把 `@zink_ning/dsh-ui-state` 加入 `dsh.profile.bundles`。
 
 ### 从 GitHub Release 下载
 
@@ -64,7 +64,7 @@ dsh plugin --profile web add ./dsh-ui-state-0.1.1.tgz
 
 ### 本地开发 / 热装
 
-profile `package.json` 的 `dsh.profile.bundles` 加入 `@zink-ning/dsh-ui-state`，依赖用 `link:` 指向本目录；
+profile `package.json` 的 `dsh.profile.bundles` 加入 `@zink_ning/dsh-ui-state`，依赖用 `link:` 指向本目录；
 或使用 dev_install_package 热装（junction + loader.create，免重启）。
 
 ## 关联
