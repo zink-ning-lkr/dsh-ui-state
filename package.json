@@ -1,7 +1,7 @@
 {
   "name": "@zink_ning/dsh-ui-state",
-  "description": "界面状态持久化——官方左侧边栏开合与宽度跨重启恢复（自渲染 DOM，官方 client 通道）",
-  "version": "0.1.2",
+  "description": "界面状态持久化——官方左侧边栏开合与宽度跨重启恢复（自渲染 DOM，官方 client 通道），兼容 DSH 0.1.0-rc.8",
+  "version": "0.2.0",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
@@ -26,7 +26,7 @@
     "react": "^18.2.0"
   },
   "dependencies": {
-    "@deepseek-ai/dsh-settings": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-settings": "^0.1.0-rc.8",
     "@deepseek-ai/schemastery": "^3.18.1"
   },
   "license": "MIT",
@@ -38,5 +38,13 @@
   ],
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zink-ning-lkr/dsh-ui-state.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zink-ning-lkr/dsh-ui-state/issues"
+  },
+  "homepage": "https://github.com/zink-ning-lkr/dsh-ui-state#readme"
 }

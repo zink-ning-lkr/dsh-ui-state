@@ -37,6 +37,26 @@ ui-state:
       updatedAt: 1750000000000
 ```
 
+## 兼容性
+
+目标 **DSH 0.1.0-rc.8**（`dsh` CLI / profile 装配线 rc.8 时代）。0.2.0 已对 rc.8
+组合逐项核对，本插件用到的官方契约全部原样保留：
+
+- **settings 接缝**：`@deepseek-ai/dsh-settings@^0.1.0-rc.8`，`register / describe /
+  mutate`（含 `SettingsConflictError` 冲突拒绝与 revision 乐观锁）不变。
+- **webServer 路由**：`register({ kind: "exact", path, handler })` 签名不变。
+- **layout 服务**：`ctx.layout.toggleSidebar() / openDetails() / closeDetails()`
+  与 AppFrame 的 `data-sidebar-collapsed` / `data-details-collapsed` /
+  `grid-template-columns` 契约不变；拖拽手柄 `[data-side="sidebar"]`（展开时才渲染）、
+  窄屏 1024px 自动折叠同样保留。
+- **DOM 锚点**：`[data-shell-overlay]`（AppFrame 直接子节点）、`[data-chat-flow]`、
+  `[data-chat-anchor-key]`、`[data-conversation-scroll]`、`[data-composer-seat]`
+  在官方会话视图原样保留（官方自身滚动恢复同用这套锚点）。
+- **client 通道**：`window.__ModuleLoader__.load` 包格式、`sessions.list.getSnapshot()
+  .current`、`connection.isLoopback` 探针均不变。
+- 兼容性核对中发现 `dsh-settings` 的 rc.6 与 rc.8 各 JS 文件字节一致，因此旧 rc.6
+  宿主同样可用；依赖线仍升级到 `^0.1.0-rc.8` 以对齐 rc.8 生态并防未来漂移。
+
 ## 安装 / 下载
 
 ### 从 npm 安装（推荐）
@@ -55,11 +75,11 @@ npm install @zink_ning/dsh-ui-state
 
 ### 从 GitHub Release 下载
 
-到 [Releases](https://github.com/zink-ning/dsh-ui-state/releases) 下载
-`dsh-ui-state-0.1.1.tgz`，然后安装：
+到 [Releases](https://github.com/zink-ning-lkr/dsh-ui-state/releases) 下载
+`dsh-ui-state-0.2.0.tgz`，然后安装：
 
 ```bash
-dsh plugin --profile web add ./dsh-ui-state-0.1.1.tgz
+dsh plugin --profile web add ./dsh-ui-state-0.2.0.tgz
 ```
 
 ### 本地开发 / 热装
