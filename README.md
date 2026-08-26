@@ -14,14 +14,28 @@
 
 官方 layout store 是瞬态设计（宽度/开合不持久化）。插件：
 
-1. **检测**：轮询 AppFrame（`[data-shell-overlay]` 锚点）的 `data-sidebar-collapsed` 属性与
-   `grid-template-columns` 第一列，变化防抖 600ms 写入 settings.yaml。
-2. **恢复**：启动后从 `~/.dsh/settings.yaml` 读 `ui-state` 段：
-   - 侧边栏开合：调用官方 `ctx.layout.toggleSidebar()`（等 layout 服务挂载，自动重试）
+1. **检测（事件驱动）**：MutationObserver 监听 AppFrame 的 `data-sidebar-collapsed` /
+   `data-details-collapsed` 属性与 `grid-template-columns`（style），ResizeObserver
+   监听视口（窄屏判定）；变化防抖 600ms，聚合为**单次批量 mutate** 写入 settings.yaml。
+   另保留 60s 安全兜底轮询，兜住观察者漏网的 DOM 替换 / portal 重渲染。
+2. **恢复**：settings 就绪 / 框架挂载 / 会话流挂载等事件触发（600ms 重试链，最多 6 次，
+   事件可重新武装）：
+   - 侧边栏开合：调用官方 `ctx.layout.toggleSidebar()`（等 layout 服务挂载后自动重试）
    - 侧边栏宽度：找到 `[data-side="sidebar"]` 拖拽手柄，派发合成 pointer 序列（pointerdown/move/up，
      与官方 DragHandle 的监听协议一致；同步窗口内 stub pointer capture）
    - 详情面板：`ctx.layout.openDetails() / closeDetails()`（仅在会话打开时恢复）
 3. **窄屏保护**：视口 < 1024px 时官方自动折叠侧边栏，此时不持久化、不恢复，避免与自动行为打架。
+4. **卸载保护**：pagehide / freeze / 页面隐藏时同步落盘（fetch 带 keepalive），
+   600ms 防抖窗口内关闭页面也不会丢最后一次操作。
+
+## 性能
+
+- **零空闲轮询**：状态读取由事件驱动，空闲时无周期任务；60s 安全兜底仅兜异常路径。
+  相对旧版 400ms 轮询，空闲开销从 2.5 次 DOM 扫描/秒降为 0。
+- **批量写入**：一次折叠/宽度/详情变更合并为 **1 次** mutate POST（旧版最多 3 次），
+  revision 乐观锁只校验一次。
+- **观察者收窄**：会话区变更只检查新增节点；滚动恢复按 （scrollport, session） 实例
+  只执行一次，聊天流渲染期间不重复扫描。
 
 ## 配置存储
 
@@ -39,10 +53,16 @@ ui-state:
 
 ## 兼容性
 
-目标 **DSH 0.1.0-rc.8**（`dsh` CLI / profile 装配线 rc.8 时代）。0.2.0 已对 rc.8
-组合逐项核对，本插件用到的官方契约全部原样保留：
+当前宿主目标 **DSH 0.1.0-rc.8**，同一 **0.1.x 版本线**的最新 **0.1.1-rc.2** 同样覆盖
+（已逐 seam diff：settings 字节一致，layout/conversation/webserver/connection/runtime
+契约零漂移，loader/include 装配机制不变）。依赖范围故意写成双线
+`>=0.1.0-rc.8 <0.2.0 || >=0.1.1-rc.0`：npm 的 prerelease「同元组」规则使
+`^0.1.0-rc.8` 并不包含 0.1.1-rc.2，双线范围可让宿主升级后 npm 去重为同一份
+dsh-settings 实例（避免双实例导致的 `SettingsConflictError` instanceof 失效）。
+实现基于能力探测与事件驱动，不绑定具体 rc 细节，跨版本漂移时以兜底分支降级。
+0.2.0 起已逐项核对 rc.8 组合，本插件用到的官方契约全部原样保留：
 
-- **settings 接缝**：`@deepseek-ai/dsh-settings@^0.1.0-rc.8`，`register / describe /
+- **settings 接缝**：`@deepseek-ai/dsh-settings`（双线范围，见上），`register / describe /
   mutate`（含 `SettingsConflictError` 冲突拒绝与 revision 乐观锁）不变。
 - **webServer 路由**：`register({ kind: "exact", path, handler })` 签名不变。
 - **layout 服务**：`ctx.layout.toggleSidebar() / openDetails() / closeDetails()`
@@ -101,5 +121,7 @@ DSH 启动端口随机（--port 0）时每次重启都会丢失。配套修复�
 
 ## 结构
 
-- `lib/index.js` — Node half：注册 `ui-state` settings namespace + loopback 桥接路由。
-- `lib/client.js` — 浏览器 half：状态轮询持久化 + 开合/宽度恢复。
+- `lib/index.js` — Node half：注册 `ui-state` settings namespace + loopback 桥接路由
+  （`makeBridgeHandlers` / `makeBridgeRoutes` 导出供测试）。
+- `lib/client.js` — 浏览器 half：事件驱动的状态持久化 + 开合/宽度/滚动恢复。
+- `tests/bridge.test.mjs` — 桥接单测（`node --test tests/`）。
