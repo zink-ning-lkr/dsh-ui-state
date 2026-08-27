@@ -96,10 +96,10 @@ npm install @zink-ning-lkr/dsh-ui-state
 ### 从 GitHub Release 下载
 
 到 [Releases](https://github.com/zink-ning-lkr/dsh-ui-state/releases) 下载
-`dsh-ui-state-0.2.0.tgz`，然后安装：
+`dsh-ui-state-0.3.0.tgz`，然后安装：
 
 ```bash
-dsh plugin --profile web add ./dsh-ui-state-0.2.0.tgz
+dsh plugin --profile web add ./dsh-ui-state-0.3.0.tgz
 ```
 
 ### 本地开发 / 热装
