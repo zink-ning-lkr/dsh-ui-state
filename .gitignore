@@ -2,3 +2,6 @@ node_modules/
 *.tgz
 dist/
 *.log
+
+# meow-memory local workspace db (never commit)
+.dsh-meow/
